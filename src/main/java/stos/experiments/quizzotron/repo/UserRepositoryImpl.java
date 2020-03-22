@@ -1,15 +1,22 @@
 package stos.experiments.quizzotron.repo;
 
+import org.springframework.stereotype.Component;
 import stos.experiments.quizzotron.api.ApiUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class UserRepositoryImpl implements UserRepository {
-  ApiUser user1 = ApiUser.builder().id(1L).name("Stu").build();
-  ApiUser user2 = ApiUser.builder().id(2L).name("Anna").build();
+
+  private List<ApiUser> registeredUsers;
+
+  public UserRepositoryImpl() {
+    this.registeredUsers = new ArrayList<>();
+  }
 
   @Override
   public List<ApiUser> getAllRegisteredUsers() {
-    return List.of(user1, user2);
+    return registeredUsers;
   }
 }
