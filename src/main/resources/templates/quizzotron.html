@@ -10,11 +10,11 @@
 
 <h1>Welcome to the Quizzotron!</h1>
 
-<a href="user/login.html"
-   th:href="@{/user/login}">Login</a>
+<a href="login.html"
+   th:href="@{/quizzotron/login}">Login</a>
 <br>
-<a href="user/register.html"
-   th:href="@{/user/register}">Register a new User</a>
+<a href="register.html"
+   th:href="@{/quizzotron/register}">Register a new User</a>
 
 <h2>Current Users</h2>
 <ul th:each="user: ${registeredUsers}">

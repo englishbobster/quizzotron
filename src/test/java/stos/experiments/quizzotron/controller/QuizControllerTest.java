@@ -39,10 +39,16 @@ class QuizControllerTest {
   }
 
   @Test
-  void reach_the_start_page() throws Exception {
+  void reach_the_start_page_with_registered_users_displayed() throws Exception {
     mockMvc.perform(get("/quizzotron"))
         .andExpect(view().name("quizzotron"))
         .andExpect(model().attributeExists("registeredUsers"))
         .andExpect(model().attribute("registeredUsers", Matchers.hasItems(USER_1,USER_2)));
+  }
+
+  @Test
+  void registration_form_is_displayed() throws Exception {
+    mockMvc.perform(get("/quizzotron/register"))
+        .andExpect(view().name("register"));
   }
 }
