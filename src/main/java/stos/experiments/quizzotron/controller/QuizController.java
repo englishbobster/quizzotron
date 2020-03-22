@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import stos.experiments.quizzotron.api.ApiUser;
 import stos.experiments.quizzotron.repo.UserRepository;
 
 @Controller
@@ -27,5 +29,11 @@ public class QuizController {
   @GetMapping("/register")
   public String registration() {
     return "register";
+  }
+
+  @PostMapping("/register")
+  public String register(ApiUser user) {
+    userRepository.registerUser(user);
+    return "redirect:/quizzotron";
   }
 }

@@ -7,4 +7,6 @@ import java.util.List;
 public interface UserRepository {
 
   List<ApiUser> getAllRegisteredUsers();
+
+  ApiUser registerUser(ApiUser user);
 }
