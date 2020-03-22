@@ -11,10 +11,15 @@
 <h1>Welcome to the Quizzotron!</h1>
 
 <a href="user/login.html"
-    th:href="@{/user/login}">Login</a>
+   th:href="@{/user/login}">Login</a>
 <br>
 <a href="user/register.html"
-    th:href="@{/user/register}">Register a new User</a>
+   th:href="@{/user/register}">Register a new User</a>
+
+<h2>Current Users</h2>
+<ul th:each="user: ${registeredUsers}">
+    <li th:text="${user.getName()}">registeredUser</li>
+</ul>
 
 </body>
 

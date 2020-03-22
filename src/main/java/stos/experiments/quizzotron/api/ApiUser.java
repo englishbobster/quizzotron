@@ -8,6 +8,6 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class ApiUser {
-  private int id;
+  private Long id;
   private String name;
 }
