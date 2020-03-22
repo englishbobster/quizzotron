@@ -80,7 +80,6 @@ class QuizControllerTest {
                         .param("name", TOO_SHORT_USERNAME)
                         .param("password", PASSWORD))
         .andExpect(view().name("register"));
-
   }
 
   @Test
@@ -89,6 +88,5 @@ class QuizControllerTest {
                         .param("name", USERNAME)
                         .param("password", TOO_LONG_PWD))
         .andExpect(view().name("register"));
-
   }
 }
