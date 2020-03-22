@@ -14,6 +14,6 @@ import lombok.Setter;
 public class ApiUser {
   @EqualsAndHashCode.Exclude
   private Long id;
-
   private String name;
+  private String password;
 }

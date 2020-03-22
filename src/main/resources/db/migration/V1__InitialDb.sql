@@ -1,6 +1,7 @@
 CREATE TABLE users (
     user_id serial PRIMARY KEY,
-    user_name VARCHAR(32)
+    user_name VARCHAR(32),
+    password VARCHAR(256)
 );
 
 CREATE TABLE quizzes (

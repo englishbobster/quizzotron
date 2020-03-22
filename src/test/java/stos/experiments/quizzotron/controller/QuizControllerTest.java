@@ -46,7 +46,7 @@ class QuizControllerTest {
     mockMvc.perform(get("/quizzotron"))
         .andExpect(view().name("quizzotron"))
         .andExpect(model().attributeExists("registeredUsers"))
-        .andExpect(model().attribute("registeredUsers", Matchers.hasItems(USER_1,USER_2)));
+        .andExpect(model().attribute("registeredUsers", Matchers.hasItems(USER_1, USER_2)));
   }
 
   @Test
@@ -57,13 +57,14 @@ class QuizControllerTest {
 
   @Test
   void process_the_registration_form() throws Exception {
-    ApiUser unsaved = ApiUser.builder().name("Mungo").build();
-    ApiUser saved = ApiUser.builder().id(1L).name("Mungo").build();
+    ApiUser unsaved = ApiUser.builder().name("Mungo").password("secretpwd").build();
+    ApiUser saved = ApiUser.builder().id(1L).name("Mungo").password("secretpwd").build();
 
     when(userRepository.registerUser(unsaved)).thenReturn(saved);
 
     mockMvc.perform(post("/quizzotron/register")
-                        .param("name", "Mungo"))
+                        .param("name", "Mungo")
+                        .param("password", "secretpwd"))
         .andExpect(redirectedUrl("/quizzotron"));
 
     verify(userRepository, times(1)).registerUser(unsaved);
