@@ -31,6 +31,10 @@ class QuizControllerTest {
 
   private static final ApiUser USER_1 = ApiUser.builder().id(1L).name("Stu").build();
   private static final ApiUser USER_2 = ApiUser.builder().id(2L).name("Anna").build();
+  public static final String TOO_LONG_PWD = "thispasswordisgoingtobetoolongIamguessing";
+  public static final String USERNAME = "Mungo";
+  public static final String PASSWORD = "secretpwd";
+  public static final String TOO_SHORT_USERNAME = "X";
 
   @Autowired
   private MockMvc mockMvc;
@@ -57,16 +61,34 @@ class QuizControllerTest {
 
   @Test
   void process_the_registration_form() throws Exception {
-    ApiUser unsaved = ApiUser.builder().name("Mungo").password("secretpwd").build();
-    ApiUser saved = ApiUser.builder().id(1L).name("Mungo").password("secretpwd").build();
+    ApiUser unsaved = ApiUser.builder().name(USERNAME).password(PASSWORD).build();
+    ApiUser saved = ApiUser.builder().id(1L).name(USERNAME).password(PASSWORD).build();
 
     when(userRepository.registerUser(unsaved)).thenReturn(saved);
 
     mockMvc.perform(post("/quizzotron/register")
-                        .param("name", "Mungo")
-                        .param("password", "secretpwd"))
+                        .param("name", USERNAME)
+                        .param("password", PASSWORD))
         .andExpect(redirectedUrl("/quizzotron"));
 
     verify(userRepository, times(1)).registerUser(unsaved);
+  }
+
+  @Test
+  void return_to_registration_if_user_name_not_validated() throws Exception {
+    mockMvc.perform(post("/quizzotron/register")
+                        .param("name", TOO_SHORT_USERNAME)
+                        .param("password", PASSWORD))
+        .andExpect(view().name("register"));
+
+  }
+
+  @Test
+  void return_to_registration_if_password_not_validated() throws Exception {
+    mockMvc.perform(post("/quizzotron/register")
+                        .param("name", USERNAME)
+                        .param("password", TOO_LONG_PWD))
+        .andExpect(view().name("register"));
+
   }
 }
