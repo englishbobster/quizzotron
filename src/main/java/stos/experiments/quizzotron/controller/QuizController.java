@@ -4,12 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import stos.experiments.quizzotron.api.ApiUser;
-import stos.experiments.quizzotron.repo.UserRepository;
+import stos.experiments.quizzotron.service.UserService;
 
 import javax.validation.Valid;
 
@@ -17,23 +16,22 @@ import javax.validation.Valid;
 @RequestMapping("/quizzotron")
 public class QuizController {
 
-  private final UserRepository userRepository;
+  private final UserService userService;
 
   @Autowired
-  public QuizController(UserRepository userRepository) {
-    this.userRepository = userRepository;
+  public QuizController(UserService userService) {
+    this.userService = userService;
   }
 
   @GetMapping
   public String home(Model model) {
-    model.addAttribute("registeredUsers", userRepository.getAllRegisteredUsers());
+    model.addAttribute("registeredUsers", userService.getAllRegisteredUsers());
     return "quizzotron";
   }
 
   @GetMapping("/register")
   public String registration(Model model) {
-    ApiUser user = new ApiUser();
-    model.addAttribute("user", user);
+    model.addAttribute("user", new ApiUser());
     return "register";
   }
 
@@ -43,8 +41,8 @@ public class QuizController {
     if (result.hasErrors()) {
       return "register";
     }
-    userRepository.registerUser(user);
-    model.addAttribute("registeredUsers", userRepository.getAllRegisteredUsers());
+    userService.registerUser(user);
+    model.addAttribute("registeredUsers", userService.getAllRegisteredUsers());
     return "redirect:/quizzotron";
   }
 }

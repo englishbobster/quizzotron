@@ -1,17 +1,15 @@
 package stos.experiments.quizzotron.controller;
 
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.verification.VerificationMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import stos.experiments.quizzotron.api.ApiUser;
-import stos.experiments.quizzotron.repo.UserRepository;
+import stos.experiments.quizzotron.service.UserService;
 
 import java.util.List;
 
@@ -40,12 +38,12 @@ class QuizControllerTest {
   private MockMvc mockMvc;
 
   @MockBean
-  private UserRepository userRepository;
+  private UserService userService;
 
   @Test
   void reach_the_start_page_with_registered_users_displayed() throws Exception {
     List<ApiUser> mockedUsersList = List.of(USER_1, USER_2);
-    when(userRepository.getAllRegisteredUsers()).thenReturn(mockedUsersList);
+    when(userService.getAllRegisteredUsers()).thenReturn(mockedUsersList);
 
     mockMvc.perform(get("/quizzotron"))
         .andExpect(view().name("quizzotron"))
@@ -64,14 +62,14 @@ class QuizControllerTest {
     ApiUser unsaved = ApiUser.builder().name(USERNAME).password(PASSWORD).build();
     ApiUser saved = ApiUser.builder().id(1L).name(USERNAME).password(PASSWORD).build();
 
-    when(userRepository.registerUser(unsaved)).thenReturn(saved);
+    when(userService.registerUser(unsaved)).thenReturn(saved);
 
     mockMvc.perform(post("/quizzotron/register")
                         .param("name", USERNAME)
                         .param("password", PASSWORD))
         .andExpect(redirectedUrl("/quizzotron"));
 
-    verify(userRepository, times(1)).registerUser(unsaved);
+    verify(userService, times(1)).registerUser(unsaved);
   }
 
   @Test

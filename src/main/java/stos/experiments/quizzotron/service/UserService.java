@@ -1,10 +1,10 @@
-package stos.experiments.quizzotron.repo;
+package stos.experiments.quizzotron.service;
 
 import stos.experiments.quizzotron.api.ApiUser;
 
 import java.util.List;
 
-public interface UserRepository {
+public interface UserService {
 
   List<ApiUser> getAllRegisteredUsers();
 

@@ -1,4 +1,4 @@
-package stos.experiments.quizzotron.repo;
+package stos.experiments.quizzotron.service;
 
 import org.springframework.stereotype.Component;
 import stos.experiments.quizzotron.api.ApiUser;
@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class UserRepositoryImpl implements UserRepository {
+public class UserServiceImpl implements UserService {
 
   private List<ApiUser> registeredUsers;
   private static Long idCtr;
 
-  public UserRepositoryImpl() {
+  public UserServiceImpl() {
     this.registeredUsers = new ArrayList<>();
     idCtr = 0L;
   }
