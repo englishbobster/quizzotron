@@ -4,17 +4,25 @@
 <head>
     <title>User Registration</title>
     <meta charset="UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="quizzotron.css"/>
 </head>
 
 <body>
 
 <h1>Register</h1>
 <form action="#" th:action="@{/quizzotron/register}" th:object="${user}" method="POST">
-    UserName: <input type="text" th:field="*{name}" placeholder="Name" />
+    <label th:class="${#fields.hasErrors('name')}? error">UserName:</label>
+    <input type="text" th:field="*{name}" placeholder="Name" />
     <br>
-    Password: <input type="password" th:field="*{password}" />
+    <label>Password:</label>
+    <input type="password" th:field="*{password}" />
     <br>
     <input type="submit" value="Register" />
+
+    <div class="errors" th:if="${#fields.hasAnyErrors()}">
+        <ul><li th:each="err : ${#fields.allErrors()}" th:text="${err}">Error in input</li></ul>
+    </div>
+
 </form>
 </body>
 
