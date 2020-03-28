@@ -11,17 +11,15 @@
 
 <h1>Register</h1>
 <form action="#" th:action="@{/quizzotron/register}" th:object="${user}" method="POST">
-    <label th:class="${#fields.hasErrors('name')}? error">UserName:</label>
+    <label th:class="${#fields.hasErrors('name')}? error">UserName:
     <input type="text" th:field="*{name}" placeholder="Name" />
+    </label> <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Faulty input</p>
     <br>
-    <label>Password:</label>
-    <input type="password" th:field="*{password}" />
+    <label>Password:
+        <input type="password" th:field="*{password}" />
+    </label> <p th:if="${#fields.hasErrors('password')}" th:errors="*{name}">Faulty input</p>
     <br>
     <input type="submit" value="Register" />
-
-    <div class="errors" th:if="${#fields.hasAnyErrors()}">
-        <ul><li th:each="err : ${#fields.allErrors()}" th:text="${err}">Error in input</li></ul>
-    </div>
 
 </form>
 </body>
