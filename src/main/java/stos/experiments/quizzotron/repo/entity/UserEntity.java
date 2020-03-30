@@ -19,14 +19,13 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-@Table(name = "user")
+@Table(name = "users")
 public class UserEntity {
 
   @Id
   @EqualsAndHashCode.Exclude
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "user_id")
-
   private Long id;
 
   @Column(name = "user_name")
