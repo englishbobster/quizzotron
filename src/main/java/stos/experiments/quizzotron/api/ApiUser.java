@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.With;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -20,6 +21,7 @@ import javax.validation.constraints.Size;
 @ToString
 public class ApiUser {
   @EqualsAndHashCode.Exclude
+  @With
   private Long id;
   @NotNull
   @Size(min=3, max=32)

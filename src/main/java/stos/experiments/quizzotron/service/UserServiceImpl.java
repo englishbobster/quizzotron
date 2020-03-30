@@ -1,25 +1,38 @@
 package stos.experiments.quizzotron.service;
 
-import org.springframework.stereotype.Component;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import stos.experiments.quizzotron.api.ApiUser;
+import stos.experiments.quizzotron.repo.UserRepository;
+import stos.experiments.quizzotron.repo.entity.UserEntity;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Component
+@Service
 public class UserServiceImpl implements UserService {
 
-  public UserServiceImpl() {
+  private UserRepository userRepository;
 
+  @Autowired
+  public UserServiceImpl(UserRepository userRepository) {
+    this.userRepository = userRepository;
   }
 
   @Override
   public List<ApiUser> getAllRegisteredUsers() {
-    return Collections.emptyList();
+    List<UserEntity> allUsers = userRepository.findAll();
+    ModelMapper mapper = new ModelMapper();
+    List<ApiUser> apiUsers = allUsers.stream().map(ue -> mapper.map(ue, ApiUser.class)).collect(Collectors.toList());
+    return apiUsers;
   }
 
   @Override
   public ApiUser registerUser(ApiUser user) {
-    return null;
+    ModelMapper mapper = new ModelMapper();
+    UserEntity mappedEntity = mapper.map(user, UserEntity.class);
+    UserEntity save = userRepository.save(mappedEntity);
+    return user.withId(save.getId());
   }
 }
