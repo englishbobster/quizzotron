@@ -37,11 +37,17 @@ public class UserServiceImpl implements UserService {
     return user.withId(save.getId());
   }
 
+  @Override
+  public ApiUser getRegisteredUser(String name) {
+    UserEntity byName = userRepository.findByName(name);
+    return apiUser(byName);
+  }
+
   private static ApiUser apiUser(UserEntity entity) {
     return ApiUser.builder()
                .id(entity.getId())
                .name(entity.getName())
-               .password(entity.getPassword())
+               .password("")
                .build();
   }
 

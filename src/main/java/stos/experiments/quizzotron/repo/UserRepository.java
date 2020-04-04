@@ -5,4 +5,7 @@ import org.springframework.stereotype.Repository;
 import stos.experiments.quizzotron.repo.entity.UserEntity;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity, Long> { }
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
+
+  UserEntity findByName(String name);
+}

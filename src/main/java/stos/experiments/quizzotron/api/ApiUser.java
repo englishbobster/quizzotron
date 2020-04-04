@@ -28,5 +28,6 @@ public class ApiUser {
   private String name;
   @NotNull
   @Size(min=6, max=32)
+  @EqualsAndHashCode.Exclude
   private String password;
 }

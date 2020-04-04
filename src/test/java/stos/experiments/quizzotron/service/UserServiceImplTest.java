@@ -8,10 +8,8 @@ import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import stos.experiments.quizzotron.api.ApiUser;
 import stos.experiments.quizzotron.repo.UserRepository;
@@ -19,6 +17,7 @@ import stos.experiments.quizzotron.repo.UserRepository;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -56,6 +55,15 @@ class UserServiceImplTest {
     ApiUser savedUser = userService.registerUser(API_USER_1);
     assertThat(savedUser, is(equalTo(API_USER_1)));
     assertThat(savedUser.getId(), is(equalTo(1L)));
+  }
+
+  @Test
+  void find_a_user_by_name_and_check_that_password_is_never_returned() {
+    ApiUser savedUser = userService.registerUser(API_USER_1);
+    ApiUser registeredUser = userService.getRegisteredUser(API_USER_1.getName());
+    assertThat(registeredUser.getId(), is(equalTo(savedUser.getId())));
+    assertThat(registeredUser, is(equalTo(savedUser)));
+    assertThat(registeredUser.getPassword(), is(emptyString()));
   }
 
   @Test

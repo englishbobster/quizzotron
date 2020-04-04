@@ -9,4 +9,6 @@ public interface UserService {
   List<ApiUser> getAllRegisteredUsers();
 
   ApiUser registerUser(ApiUser user);
+
+  ApiUser getRegisteredUser(String name);
 }
