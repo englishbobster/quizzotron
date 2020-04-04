@@ -1,7 +1,7 @@
 package stos.experiments.quizzotron.service;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import stos.experiments.quizzotron.api.ApiUser;
 import stos.experiments.quizzotron.repo.UserRepository;
@@ -15,24 +15,41 @@ public class UserServiceImpl implements UserService {
 
   private UserRepository userRepository;
 
+  private PasswordEncoder passwordEncoder;
+
   @Autowired
-  public UserServiceImpl(UserRepository userRepository) {
+  public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
     this.userRepository = userRepository;
+    this.passwordEncoder = passwordEncoder;
   }
 
   @Override
   public List<ApiUser> getAllRegisteredUsers() {
     List<UserEntity> allUsers = userRepository.findAll();
-    ModelMapper mapper = new ModelMapper();
-    List<ApiUser> apiUsers = allUsers.stream().map(ue -> mapper.map(ue, ApiUser.class)).collect(Collectors.toList());
+    List<ApiUser> apiUsers = allUsers.stream().map(UserServiceImpl::apiUser).collect(Collectors.toList());
     return apiUsers;
   }
 
   @Override
   public ApiUser registerUser(ApiUser user) {
-    ModelMapper mapper = new ModelMapper();
-    UserEntity mappedEntity = mapper.map(user, UserEntity.class);
-    UserEntity save = userRepository.save(mappedEntity);
+    UserEntity userEntity = userEntity(user);
+    UserEntity save = userRepository.save(userEntity);
     return user.withId(save.getId());
   }
+
+  private static ApiUser apiUser(UserEntity entity) {
+    return ApiUser.builder()
+               .id(entity.getId())
+               .name(entity.getName())
+               .password(entity.getPassword())
+               .build();
+  }
+
+  private UserEntity userEntity(ApiUser user) {
+    UserEntity userEntity = new UserEntity();
+    userEntity.setName(user.getName());
+    userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
+    return userEntity;
+  }
+
 }

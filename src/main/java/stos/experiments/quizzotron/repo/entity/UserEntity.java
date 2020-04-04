@@ -24,7 +24,7 @@ public class UserEntity {
 
   @Id
   @EqualsAndHashCode.Exclude
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE)
   @Column(name = "user_id")
   private Long id;
 
