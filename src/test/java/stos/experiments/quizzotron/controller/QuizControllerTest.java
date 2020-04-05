@@ -13,6 +13,9 @@ import stos.experiments.quizzotron.service.UserService;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -52,9 +55,31 @@ class QuizControllerTest {
   }
 
   @Test
-  void registration_form_is_displayed() throws Exception {
+  void registration_form_is_displayed_when_following_link() throws Exception {
     mockMvc.perform(get("/quizzotron/register"))
         .andExpect(view().name("register"));
+  }
+
+  @Test
+  void login_form_is_displayed_when_following_link() throws Exception {
+    mockMvc.perform(get("/quizzotron/login"))
+        .andExpect(view().name("login"))
+        .andExpect(model().attribute("user", is(equalTo(new ApiUser()))));
+  }
+
+  @Test
+  void login_form_is_displayed_when_choosing_a_registered_user_from_main_page() throws Exception {
+    ApiUser registeredUser = ApiUser.builder()
+                                 .name("bob")
+                                 .password("")
+                                 .id(1L)
+                                 .build();
+
+    when(userService.getRegisteredUser(eq("bob"))).thenReturn(registeredUser);
+
+    mockMvc.perform(get("/quizzotron/{user}", "bob"))
+        .andExpect(view().name("login"))
+        .andExpect(model().attribute("user", is(equalTo(registeredUser))));
   }
 
   @Test

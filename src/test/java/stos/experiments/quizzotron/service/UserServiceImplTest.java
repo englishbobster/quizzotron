@@ -54,7 +54,7 @@ class UserServiceImplTest {
   void return_a_user_when_it_has_been_saved_in_the_repo_with_an_index() {
     ApiUser savedUser = userService.registerUser(API_USER_1);
     assertThat(savedUser, is(equalTo(API_USER_1)));
-    assertThat(savedUser.getId(), is(equalTo(1L)));
+    assertThat(savedUser.getId(), is(equalTo(10L)));
   }
 
   @Test

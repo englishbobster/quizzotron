@@ -18,7 +18,7 @@
 
 <h2>Current Users</h2>
 <ul th:each="user: ${registeredUsers}">
-    <li th:text="${user.getName()}">registeredUser</li>
+    <li><a th:href="@{/quizzotron/login}" th:text="${user.getName()}">registeredUser</a></li>
 </ul>
 
 </body>

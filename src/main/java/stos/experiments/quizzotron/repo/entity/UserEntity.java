@@ -25,10 +25,10 @@ public class UserEntity {
   @Id
   @EqualsAndHashCode.Exclude
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
-  @Column(name = "user_id")
+  @Column(name = "user_id", unique = true)
   private Long id;
 
-  @Column(name = "user_name")
+  @Column(name = "user_name", unique = true)
   private String name;
 
   @Column(name = "password")

@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import stos.experiments.quizzotron.api.ApiUser;
@@ -36,6 +37,12 @@ public class QuizController {
     return "register";
   }
 
+  @GetMapping("/login")
+  public String login(Model model) {
+    model.addAttribute("user", new ApiUser());
+    return "login";
+  }
+
   @PostMapping("/register")
   public String register(@Valid @ModelAttribute("user") ApiUser user, BindingResult result, Model model) {
     model.addAttribute("user", user);
@@ -45,5 +52,11 @@ public class QuizController {
     userService.registerUser(user);
     model.addAttribute("registeredUsers", userService.getAllRegisteredUsers());
     return "redirect:/quizzotron";
+  }
+
+  @GetMapping("/{user}")
+  public String login(@PathVariable("user") String userName, Model model) {
+    model.addAttribute("user", userService.getRegisteredUser(userName));
+    return "login";
   }
 }

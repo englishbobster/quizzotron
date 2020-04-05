@@ -1,8 +1,11 @@
 CREATE TABLE users (
-    user_id serial PRIMARY KEY,
-    user_name VARCHAR(32),
-    password VARCHAR(256)
+    user_id serial UNIQUE NOT NULL,
+    user_name VARCHAR(32) UNIQUE NOT NULL,
+    password VARCHAR(256),
+    CONSTRAINT users_pk PRIMARY KEY (user_id)
 );
+
+CREATE SEQUENCE hibernate_sequence;
 
 CREATE TABLE quizzes (
     quiz_id serial PRIMARY KEY,
