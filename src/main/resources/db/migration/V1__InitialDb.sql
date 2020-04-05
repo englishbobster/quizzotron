@@ -2,7 +2,7 @@ CREATE TABLE users (
     user_id serial UNIQUE NOT NULL,
     user_name VARCHAR(32) UNIQUE NOT NULL,
     password VARCHAR(256),
-    CONSTRAINT users_pk PRIMARY KEY (user_id)
+    CONSTRAINT users_pkey PRIMARY KEY (user_id, user_name)
 );
 
 CREATE SEQUENCE hibernate_sequence;
