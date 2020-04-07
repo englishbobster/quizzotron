@@ -15,6 +15,7 @@ import stos.experiments.quizzotron.api.ApiUser;
 import stos.experiments.quizzotron.repo.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.emptyString;
@@ -52,18 +53,21 @@ class UserServiceImplTest {
 
   @Test
   void return_a_user_when_it_has_been_saved_in_the_repo_with_an_index() {
-    ApiUser savedUser = userService.registerUser(API_USER_1);
-    assertThat(savedUser, is(equalTo(API_USER_1)));
-    assertThat(savedUser.getId(), is(equalTo(10L)));
+    Optional<ApiUser> savedUser = userService.registerUser(API_USER_1);
+    assertThat(savedUser.isPresent(), is(true));
+    assertThat(savedUser.get(), is(equalTo(API_USER_1)));
+    assertThat(savedUser.get().getId(), is(equalTo(10L)));
   }
 
   @Test
   void find_a_user_by_name_and_check_that_password_is_never_returned() {
-    ApiUser savedUser = userService.registerUser(API_USER_1);
-    ApiUser registeredUser = userService.getRegisteredUser(API_USER_1.getName());
-    assertThat(registeredUser.getId(), is(equalTo(savedUser.getId())));
-    assertThat(registeredUser, is(equalTo(savedUser)));
-    assertThat(registeredUser.getPassword(), is(emptyString()));
+    Optional<ApiUser> savedUser = userService.registerUser(API_USER_1);
+    Optional<ApiUser> registeredUser = userService.getRegisteredUser(API_USER_1.getName());
+    assertThat(savedUser.isPresent(), is(true));
+    assertThat(registeredUser.isPresent(), is(true));
+    assertThat(registeredUser.get().getId(), is(equalTo(savedUser.get().getId())));
+    assertThat(registeredUser.get(), is(equalTo(savedUser.get())));
+    assertThat(registeredUser.get().getPassword(), is(emptyString()));
   }
 
   @Test

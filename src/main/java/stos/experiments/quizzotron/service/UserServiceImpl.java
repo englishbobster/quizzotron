@@ -8,6 +8,7 @@ import stos.experiments.quizzotron.repo.UserRepository;
 import stos.experiments.quizzotron.repo.entity.UserEntity;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,16 +32,22 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public ApiUser registerUser(ApiUser user) {
+  public Optional<ApiUser> registerUser(ApiUser user) {
     UserEntity userEntity = userEntity(user);
     UserEntity save = userRepository.save(userEntity);
-    return user.withId(save.getId());
+    if (save == null) {
+      return Optional.empty();
+    }
+    return Optional.of(user.withId(save.getId()));
   }
 
   @Override
-  public ApiUser getRegisteredUser(String name) {
-    UserEntity byName = userRepository.findByName(name);
-    return apiUser(byName);
+  public Optional<ApiUser> getRegisteredUser(String name) {
+    Optional<UserEntity> entity = userRepository.findByName(name);
+    if (entity.isPresent()) {
+      return Optional.of(apiUser(entity.get()));
+    }
+    return Optional.empty();
   }
 
   private static ApiUser apiUser(UserEntity entity) {

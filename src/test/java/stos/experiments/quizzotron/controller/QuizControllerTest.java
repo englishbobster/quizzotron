@@ -12,8 +12,8 @@ import stos.experiments.quizzotron.api.ApiUser;
 import stos.experiments.quizzotron.service.UserService;
 
 import java.util.List;
+import java.util.Optional;
 
-import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.eq;
@@ -30,8 +30,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(QuizController.class)
 class QuizControllerTest {
 
-  private static final ApiUser USER_1 = ApiUser.builder().id(1L).name("Stu").build();
-  private static final ApiUser USER_2 = ApiUser.builder().id(2L).name("Anna").build();
+  public static final String NAME_1 = "Stu";
+  public static final String NAME_2 = "Anna";
+  private static final ApiUser USER_1 = ApiUser.builder().id(1L).name(NAME_1).build();
+  private static final ApiUser USER_2 = ApiUser.builder().id(2L).name(NAME_2).build();
   public static final String TOO_LONG_PWD = "thispasswordisgoingtobetoolongIamguessing";
   public static final String USERNAME = "Mungo";
   public static final String PASSWORD = "secretpwd";
@@ -42,6 +44,8 @@ class QuizControllerTest {
 
   @MockBean
   private UserService userService;
+  public static final ApiUser UNSAVED_USER = ApiUser.builder().name(USERNAME).password(PASSWORD).build();
+  public static final ApiUser SAVED_USER = ApiUser.builder().id(1L).name(USERNAME).password(PASSWORD).build();
 
   @Test
   void reach_the_start_page_with_registered_users_displayed() throws Exception {
@@ -69,32 +73,23 @@ class QuizControllerTest {
 
   @Test
   void login_form_is_displayed_when_choosing_a_registered_user_from_main_page() throws Exception {
-    ApiUser registeredUser = ApiUser.builder()
-                                 .name("bob")
-                                 .password("")
-                                 .id(1L)
-                                 .build();
+    when(userService.getRegisteredUser(eq(NAME_1))).thenReturn(Optional.of(USER_1));
 
-    when(userService.getRegisteredUser(eq("bob"))).thenReturn(registeredUser);
-
-    mockMvc.perform(get("/quizzotron/{user}", "bob"))
+    mockMvc.perform(get("/quizzotron/{user}", NAME_1))
         .andExpect(view().name("login"))
-        .andExpect(model().attribute("user", is(equalTo(registeredUser))));
+        .andExpect(model().attribute("user", is(equalTo(USER_1))));
   }
 
   @Test
   void process_the_registration_form() throws Exception {
-    ApiUser unsaved = ApiUser.builder().name(USERNAME).password(PASSWORD).build();
-    ApiUser saved = ApiUser.builder().id(1L).name(USERNAME).password(PASSWORD).build();
-
-    when(userService.registerUser(unsaved)).thenReturn(saved);
+    when(userService.registerUser(UNSAVED_USER)).thenReturn(Optional.of(SAVED_USER));
 
     mockMvc.perform(post("/quizzotron/register")
                         .param("name", USERNAME)
                         .param("password", PASSWORD))
         .andExpect(redirectedUrl("/quizzotron"));
 
-    verify(userService, times(1)).registerUser(unsaved);
+    verify(userService, times(1)).registerUser(UNSAVED_USER);
   }
 
   @Test
@@ -110,6 +105,15 @@ class QuizControllerTest {
     mockMvc.perform(post("/quizzotron/register")
                         .param("name", USERNAME)
                         .param("password", TOO_LONG_PWD))
+        .andExpect(view().name("register"));
+  }
+
+  @Test
+  void return_to_registration_if_user_name_is_already_taken() throws Exception {
+    when(userService.getRegisteredUser(NAME_1)).thenReturn(Optional.of(USER_1));
+    mockMvc.perform(post("/quizzotron/register")
+                        .param("name", NAME_1)
+                        .param("password", PASSWORD))
         .andExpect(view().name("register"));
   }
 }

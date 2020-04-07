@@ -13,6 +13,7 @@ import stos.experiments.quizzotron.api.ApiUser;
 import stos.experiments.quizzotron.service.UserService;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/quizzotron")
@@ -49,6 +50,10 @@ public class QuizController {
     if (result.hasErrors()) {
       return "register";
     }
+    Optional<ApiUser> registeredUser = userService.getRegisteredUser(user.getName());
+    if (registeredUser.isPresent()) {
+      return "register";
+    }
     userService.registerUser(user);
     model.addAttribute("registeredUsers", userService.getAllRegisteredUsers());
     return "redirect:/quizzotron";
@@ -56,7 +61,8 @@ public class QuizController {
 
   @GetMapping("/{user}")
   public String login(@PathVariable("user") String userName, Model model) {
-    model.addAttribute("user", userService.getRegisteredUser(userName));
+    Optional<ApiUser> registeredUser = userService.getRegisteredUser(userName);
+    model.addAttribute("user", registeredUser.get());
     return "login";
   }
 }
